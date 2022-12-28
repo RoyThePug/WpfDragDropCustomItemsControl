@@ -1,0 +1,56 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:wpfAdornerTestApp="clr-namespace:WpfDragDropCustomItemsControlApp.CustomControl"
+                    xmlns:behavior="clr-namespace:WpfDragDropCustomItemsControlApp.Behavior"
+                    xmlns:collections="clr-namespace:System.Collections;assembly=System.Runtime"
+                    xmlns:b="http://schemas.microsoft.com/xaml/behaviors">
+
+    <DataTemplate x:Key="EmptyItemsTemplate">
+        <Grid Background="Gray" Opacity="0.4">
+            <TextBlock Text="No Items" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Grid>
+    </DataTemplate>
+
+    <Style TargetType="wpfAdornerTestApp:ItemsContainerCustomControl">
+        <Setter Property="behavior:BehaviorInStyleAttacher.Behaviors">
+            <Setter.Value>
+                <collections:ArrayList>
+                    <behavior:DragDropBehavior />
+                </collections:ArrayList>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="wpfAdornerTestApp:ItemsContainerCustomControl">
+                    <ItemsControl x:Name="PART_ItemsControl"
+                                  ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType=wpfAdornerTestApp:ItemsContainerCustomControl}}"
+                                  AllowDrop="True">
+                        <b:Interaction.Behaviors>
+                            <behavior:EmptyItemsControlAdornerBehavior DataTemplate="{StaticResource EmptyItemsTemplate}" />
+                        </b:Interaction.Behaviors>
+                        <ItemsControl.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <Border BorderThickness="{TemplateBinding BorderThickness}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        Background="{TemplateBinding Background}">
+                                    <ScrollViewer CanContentScroll="True" 
+                                                  VerticalScrollBarVisibility="Auto"
+                                                  Padding="{TemplateBinding Padding}"
+                                                  Focusable="False">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
